@@ -1,5 +1,7 @@
+# https://fedoraproject.org/wiki/How_to_create_a_GNU_Hello_RPM_package
+
 Name:           hello
-Version:        2.8
+Version:        2.10
 Release:        1%{?dist}
 Summary:        The "Hello World" program from GNU
 
@@ -9,8 +11,8 @@ Source0:        http://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
 
 BuildRequires: gettext
       
-Requires(post): info
-Requires(preun): info
+Requires(post): /sbin/install-info
+Requires(preun): /sbin/install-info
 
 %description 
 The "Hello World" program, done with all bells and whistles of a proper FOSS 
@@ -21,12 +23,12 @@ project, including configuration, build, internationalization, help files, etc.
 
 %build
 %configure
-make %{?_smp_mflags}
+%{__make} %{?_smp_mflags}
 
 %install
 %make_install
 %find_lang %{name}
-rm -f %{buildroot}/%{_infodir}/dir
+%{__rm} -f %{buildroot}/%{_infodir}/dir
 
 %post
 /sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
@@ -45,5 +47,9 @@ fi
 #AUTHORS ChangeLog COPYING NEWS README THANKS TODO
 
 %changelog
+* Wed Jul 27 2016 Quentin Barnes <qbarnes@yahoo-inc.com> 2.10-1
+- Change spec file to reference command rather than a package name.
+- Update to version 2.10.
+
 * Tue Sep 06 2011 The Coon of Ty <Ty@coon.org> 2.8-1
 - Initial version of the package
