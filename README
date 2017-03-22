@@ -1,8 +1,12 @@
+To prep for build:
+$ sudo yum install git yum-utils rpmdevtools rpm-build gcc
+$ rpmdev-setuptree
+
 To build:
 
-$ rpmdev-setuptree
 $ git clone git@git.corp.yahoo.com:qbarnes/hello-rpm.git
 $ cd hello-rpm/SPECS
+$ sudo yum-builddep -y hello.spec
 $ spectool -g -R hello.spec
 $ rpmbuild -bb hello.spec
 $ ls -l $(rpm -E '%{_topdir}')/RPMS/*/hello*.rpm
