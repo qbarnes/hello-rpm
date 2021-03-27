@@ -73,7 +73,7 @@ $ sudo yum install -y --enablerepo=epel mock
 
 And add yourself to the `mock` user group:
 ```
-$ sudo usermod -G mock "$USER"
+$ sudo usermod -aG mock "$USER"
 ```
 
 You don't _have_ to add yourself to the `mock` user group.  If you
