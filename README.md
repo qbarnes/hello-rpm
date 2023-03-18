@@ -69,8 +69,8 @@ $ sudo yum install -y mock
 ```
 
 If the above command failed, you may need to install and enable
-EPEL.  To install EPEL on your distro, follow
-[these directions](https://fedoraproject.org/wiki/EPEL).  Then
+EPEL.  To install EPEL on your system, follow
+[these directions](https://fedoraproject.org/wiki/EPEL), then
 run:
 ```
 $ sudo yum install -y --enablerepo=epel mock
@@ -106,7 +106,7 @@ runs because `mock` downloads and caches the upstream yum repository
 data and the package's dependent packages.
 
 To build the `hello-rpm` source RPM for your currently running
-distro using `mock`, ensure you're still in the top directory of the
+system using `mock`, ensure you're still in the top directory of the
 cloned repo and then run:
 ```
 $ mock \
@@ -135,13 +135,11 @@ $ ls -l results_rpms
 
 You'll see not only the `hello` binary RPMs, but a new
 `hello-*.src.rpm` too.  That's because the provided source rpm might
-have been from another distro or repo (e.g. OpenSUSE or Alma).  This
-new SRPM would be rebuilt for the target system.
+have been from another distro's repository (e.g. OpenSUSE or Alma).
+This new SRPM would be rebuilt for the target platform.
 
-With `mock`, you don't have to build RPMs just for the host distro
-you're on.  You can build for other distro too.  Note though, don't
-go "forward" (e.g. trying to build RHEL 8 RPMs using a RHEL 7 host).
-It may "work" sometimes, but that'll just be dumb luck if it does.
+With `mock`, you don't have to build RPMs for the host system.  You
+can build for other platforms too.
 
 For example, to make RHEL 7 "Hello, World" RPMs by using the
 source RPM first built above, run:
@@ -152,8 +150,15 @@ $ mock -r epel-7-$(arch) \
 $ ls -l results_el7_rpms
 ```
 
+You can look under `/etc/mock` to see what possible configurations
+are supported as build targets.
+
+Note though, don't go "forward" (e.g. trying to build RHEL 8 RPMs
+using a RHEL 7 host).  It may appear to work sometimes, but that'll
+just be arbitrary luck if it happens to succeed.
+
 For those wanting to know what's beyond `mock`, you may want to
-read about
+read about:
 * [Tito](https://github.com/rpm-software-management/tito/blob/master/README.md) - A tool for managing RPM based projects using git for their source code repositories
 * [Koji](https://fedoraproject.org/wiki/Koji) - A tool for building trees of RPMs
 * [COPR](https://developer.fedoraproject.org/deployment/copr/about.html) and [Open Build Service](https://openbuildservice.org/) - Package build service engines
