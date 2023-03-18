@@ -1,7 +1,7 @@
 # https://fedoraproject.org/wiki/How_to_create_a_GNU_Hello_RPM_package
 
 Name:           hello
-Version:        2.10
+Version:        2.12.1
 Release:        1%{?dist}
 Summary:        The "Hello World" program from GNU
 
@@ -48,6 +48,9 @@ fi
 #AUTHORS ChangeLog COPYING NEWS README THANKS TODO
 
 %changelog
+* Sat Mar 18 2023 Quentin Barnes <qbarnes@gmail.com> 2.12.1-1
+- Update to version 2.12.1.
+
 * Wed Jul 27 2016 Quentin Barnes <qbarnes@yahoo-inc.com> 2.10-1
 - Change spec file to reference command rather than a package name.
 - Update to version 2.10.
