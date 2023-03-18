@@ -1,6 +1,6 @@
 # Introduction
 
-You can build a "Hello, World" rpm either with the native tools or
+You can build a "Hello, World" RPM either with the native tools or
 with `mock` using these walk-through instructions.
 
 Keep in mind when this program builds, that it is no ordinary
@@ -63,15 +63,21 @@ Prep your system with the necessary packages:
 $ sudo yum install -y git yum-utils rpmdevtools
 ```
 
-Now install `mock`.  You'll first need to install the EPEL yum
-repository file.  See https://fedoraproject.org/wiki/EPEL
-
 Now install `mock`:
+```
+$ sudo yum install -y mock
+```
+
+If the above command failed, you may need to install and enable
+EPEL.  To install EPEL on your distro, follow
+[these directions](https://fedoraproject.org/wiki/EPEL).  Then
+run:
 ```
 $ sudo yum install -y --enablerepo=epel mock
 ```
 
-And add yourself to the `mock` user group:
+Once the `mock` package is installed, add yourself to the `mock`
+user group:
 ```
 $ sudo usermod -aG mock "$USER"
 ```
@@ -79,15 +85,15 @@ $ sudo usermod -aG mock "$USER"
 You don't _have_ to add yourself to the `mock` user group.  If you
 don't, you'll have to run `mock` below using `sudo`.
 
-**Before continuing, you'll need to log out and log back in to update your
-credentials.**
+**Before continuing, you'll need to log out and log back in to update
+your credentials.**
 
 Clone the "Hello, World" repository:
 ```
 $ git clone git@github.com:qbarnes/hello-rpm.git
 ```
 
-Change to the `hello-rpm` directory and prep it:
+Change to the `hello-rpm` directory and prep it for building the RPMs:
 ```
 $ cd hello-rpm
 $ sudo yum-builddep -y SPECS/hello.spec
@@ -96,51 +102,54 @@ $ spectool -g -C SOURCES SPECS/hello.spec
 ```
 
 The first time you run `mock`, it'll take much longer than other
-runs because it has to download and cache the upstream yum
-repository data and necessary rpms.
+runs because `mock` downloads and caches the upstream yum repository
+data and the package's dependent packages.
 
-Change back into the git work area and build a source RPM:
+To build the `hello-rpm` source RPM for your currently running
+distro using `mock`, ensure you're still in the top directory of the
+cloned repo and then run:
 ```
-$ cd hello-rpm
-$ mock -r epel-8-$(arch) \
+$ mock \
     --resultdir=results_srpm \
     --buildsrpm \
     --spec SPECS/hello.spec --sources SOURCES
 ```
 
-Look under `results_srpm` to see your new srpm and log files from its build:
+Look under the `results_srpm` directory to see your new SRPM and
+log files from its build:
 ```
 $ ls -l results_srpm
 ```
 
-Let's now build the binary RPMs:
+Let's now build the binary RPMs from its SRPM by running:
 ```
-$ mock -r epel-8-$(arch) \
+$ mock \
     --resultdir=results_rpms \
-    --rebuild results_srpm/hello-2.10-1.*.src.rpm
+    --rebuild results_srpm/hello-*.src.rpm
 ```
 
-Look under `results_rpms`.  You'll see not only the binary rpms, but
-a new `hello-2.10-1.*.src.rpm` too.  This is because the source rpm
-got rebuilt before its binary RPMs.  That's because you might have
-for example taken a source rpm from anywhere (e.g. one from RHEL 6
-or Fedora 31).  This new source rpm would be for the target system.
+Look under `results_rpms`:
 ```
 $ ls -l results_rpms
 ```
 
-With `mock`, you don't have to build RPMs just for the host OS
-you're on.  You can build other OSes too.  Note though, don't go
-"forward" (e.g. trying to build RHEL 8 RPMs using a RHEL 7 host).
+You'll see not only the `hello` binary RPMs, but a new
+`hello-*.src.rpm` too.  That's because the provided source rpm might
+have been from another distro or repo (e.g. OpenSUSE or Alma).  This
+new SRPM would be rebuilt for the target system.
+
+With `mock`, you don't have to build RPMs just for the host distro
+you're on.  You can build for other distro too.  Note though, don't
+go "forward" (e.g. trying to build RHEL 8 RPMs using a RHEL 7 host).
 It may "work" sometimes, but that'll just be dumb luck if it does.
 
-For example, to make RHEL 6 "Hello, World" RPMs by using the
+For example, to make RHEL 7 "Hello, World" RPMs by using the
 source RPM first built above, run:
 ```
-$ mock -r epel-6-$(arch) \
-    --resultdir=results_el6_rpms \
-    --rebuild results_srpm/hello-2.10-1.*.src.rpm
-$ ls -l results_el6_rpms
+$ mock -r epel-7-$(arch) \
+    --resultdir=results_el7_rpms \
+    --rebuild results_srpm/hello-*.src.rpm
+$ ls -l results_el7_rpms
 ```
 
 For those wanting to know what's beyond `mock`, you may want to
