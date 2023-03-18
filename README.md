@@ -12,7 +12,7 @@ These steps are not necessarily how such a process would be advised
 for general development use.
 
 For further information on `mock`, see:
-https://github.com/rpm-software-management/mock/wiki
+https://rpm-software-management.github.io/mock/
 
 # Building RPMs Natively
 
